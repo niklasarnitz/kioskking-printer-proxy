@@ -1,0 +1,16 @@
+services:
+  printer-proxy:
+    image: nginx:1.27-alpine
+    container_name: kioskking-printer-proxy
+    restart: unless-stopped
+    ports:
+      - "${PROXY_PORT:-8631}:8631"
+    environment:
+      CUPS_HOST: "${CUPS_HOST:-host.docker.internal}"
+      CUPS_PORT: "${CUPS_PORT:-631}"
+      ALLOWED_ORIGIN_LOCAL: "${ALLOWED_ORIGIN_LOCAL:-http://localhost:3000}"
+      ALLOWED_ORIGIN_PRODUCTION: "${ALLOWED_ORIGIN_PRODUCTION:-https://kioskking.arnitz.org}"
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
